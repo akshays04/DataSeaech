@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -22,8 +23,8 @@ public class App
     public static void main( String[] args ) throws FileNotFoundException, IOException, ParseException
     {
         String word = "watch";
-        String jsonPath1 = "C:\\Users\\Akshay\\cs454seo\\Indexer\\target\\indexer.json";
-        String jsonPath2 = "C:\\Users\\Akshay\\cs454seo\\Indexer\\target\\ranking.json";
+        String jsonPath1 = "C:\\Users\\Gaurav\\CS454_Web_Search_Engine\\Indexer\\target\\indexer.json";
+        String jsonPath2 = "C:\\Users\\Gaurav\\CS454_Web_Search_Engine\\Indexer\\target\\ranking.json";
         File jsonFile1 = new File(jsonPath1);
         File jsonFile2 = new File(jsonPath2);
         //System.out.println(jsonFile1);
@@ -68,9 +69,9 @@ public class App
 			//System.out.println(temp);
 			}
 		}
-		
-		//sortByTotal(results);
-		sortByPageRank(results);
+		cleanUrl(results);
+		sortByTotal(results);
+		//sortByPageRank(results);
 		
 		for(ResultBean result : results){
 			System.out.println(result.getUrl());
@@ -123,6 +124,7 @@ public class App
 			{
 				total1 = (10*results.get(j).getPageRank())+results.get(j).getCount()+results.get(j).getTitleRank()+results.get(j).getTermFreq();
 				total2 = (10*results.get(j+1).getPageRank())+results.get(j+1).getCount()+results.get(j+1).getTitleRank()+results.get(j+1).getTermFreq();
+				
 				System.out.println(total1+" vs "+total2);
 				if(total1<total2)
 					swap(results,j,j+1);
@@ -134,6 +136,19 @@ public class App
 		temp = results.get(x);
 		results.set(x, results.get(y));
 		results.set(y, temp);
+    }
+    public static List<ResultBean> cleanUrl(List<ResultBean> result)
+    {
+    	Iterator<ResultBean> iterator = result.iterator();
+    	while(iterator.hasNext())
+    	{
+    		ResultBean resultBean = iterator.next();
+    		if(resultBean.getUrl().contains(".rss") || resultBean.getUrl().contains(".css"))
+    		{
+    			iterator.remove();
+    		}
+    	}
+    	return result;
     }
     
     
